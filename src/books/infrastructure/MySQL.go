@@ -105,8 +105,19 @@ func (mysql *MySQL) GetBookByTitle(title string) []domain.Book {
 	return books
 }
 
-func (mysql *MySQL) UpdateBook() {
-	fmt.Println("Lista de productos")
+func (mysql *MySQL) UpdateBook(id_book int, book domain.Book) (uint, error) {
+	query := "UPDATE books SET title = ?, date_publication = ?, editorial = ?, amount = ? WHERE id_book = ?" 
+
+	res, err := mysql.conn.ExecutePreparedQuery(query, book.Title, book.Date_publication, book.Editorial, book.Amount, id_book)
+	
+	if err != nil {
+		log.Fatalln("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	id, _ := res.RowsAffected() 
+
+	return uint(id), nil
 }
 
 func (mysql *MySQL) DeleteBook() {

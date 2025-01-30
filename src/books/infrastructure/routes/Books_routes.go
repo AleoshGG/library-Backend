@@ -14,5 +14,6 @@ func RegisterRoutes(r *gin.Engine) {
 		userRoutes.GET("/", controllers.NewGetAllBooksController().GetAllBooks)
 		userRoutes.GET("/:id", controllers.NewGetBookByIdController().GetBookById)
 		userRoutes.GET("/q=:title", controllers.NewGetBookByTitleController().GetBookByTitle)
+		userRoutes.PUT("/:id", controllers.NewUpdateBookController().UpdateBook)
 	}
 }
