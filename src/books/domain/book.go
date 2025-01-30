@@ -13,10 +13,6 @@ type Book struct {
 	Amount           int64
 }
 
-func (b Book) CreateBook() {
-	panic("unimplemented")
-}
-
 func NewBook(title string, date_publication time.Time, editorial string, amount int64) *Book {
 	return &Book{Title: title, Date_publication: date_publication, Editorial: editorial, Amount: amount}
 }

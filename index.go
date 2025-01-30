@@ -2,11 +2,14 @@ package main
 
 import (
 	"library-Backend/src/books/infrastructure/routes"
+	"library-Backend/src/core"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	core.GetDBPool()
+
 	// Crear el router
 	r := gin.Default()
 
