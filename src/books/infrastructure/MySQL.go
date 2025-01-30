@@ -82,8 +82,27 @@ func (mysql *MySQL) GetBookById(id_book int) []domain.Book {
 	return books
 }
 
-func (mysql *MySQL) GetBookByTitle() {
-	fmt.Println("Lista de productos")
+func (mysql *MySQL) GetBookByTitle(title string) []domain.Book {
+	query := "SELECT * FROM books WHERE title LIKE CONCAT('%', ?, '%')"
+	var books []domain.Book
+	
+	rows := mysql.conn.FetchRows(query, title)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return books
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var b domain.Book
+		rows.Scan(&b.Id_book, &b.Title, &b.Date_publication, &b.Editorial, &b.Amount)
+
+		books = append(books, b)
+	}
+	
+	return books
 }
 
 func (mysql *MySQL) UpdateBook() {

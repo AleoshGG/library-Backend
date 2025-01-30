@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"library-Backend/src/books/aplication"
 	"library-Backend/src/books/infrastructure"
 	"net/http"
@@ -8,18 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetAllBooksController struct {
-	app *aplication.GetAllBooks
+type GetBookByTitleController struct {
+	app *aplication.GetBookByTitle
 }
 
-func NewGetAllBooksController() *GetAllBooksController {
+func NewGetBookByTitleController() *GetBookByTitleController {
 	mysql := infrastructure.GetMySQL()
-	app := aplication.NewGetAllBooks(mysql)
-	return &GetAllBooksController{app: app}
+	app := aplication.NewGetBookByTitle(mysql)
+	return &GetBookByTitleController{app: app}
 }
 
-func (gb_c *GetAllBooksController) GetAllBooks(c *gin.Context) {
-	res := gb_c.app.Run()
+func (gbt_c *GetBookByTitleController) GetBookByTitle (c *gin.Context) {
+	title := c.Param("title")
+	fmt.Println(title)
+
+	res := gbt_c.app.Run(title)
 
 	if res == nil {
 		c.JSON(http.StatusNotFound, gin.H{

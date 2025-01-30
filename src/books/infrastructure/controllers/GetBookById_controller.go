@@ -27,7 +27,7 @@ func (gbi_c *GetBookByIdController) GetBookById(c *gin.Context) {
 	res := gbi_c.app.Run(int(id_book))
 
 	if res == nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"status": false,
 			"error": "No se consigió resultados",
 		})
