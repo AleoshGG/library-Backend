@@ -58,3 +58,27 @@ func (mysql *MySQL) GetReaderByName(name string) []domain.Reader {
 	
 	return readers
 }
+
+func (mysql *MySQL) GetAllReaders() []domain.Reader {
+	query := "SELECT * FROM readers LIMIT 100"
+
+	var readers []domain.Reader
+
+	rows := mysql.conn.FetchRows(query)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return readers
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var r domain.Reader
+		rows.Scan(&r.Id_reader, &r.First_name, &r.Last_name, &r.Email, &r.Phone_number, &r.Account_status)
+
+		readers = append(readers, r)
+	}
+	
+	return readers
+}
