@@ -82,3 +82,18 @@ func (mysql *MySQL) GetAllReaders() []domain.Reader {
 	
 	return readers
 }
+
+func (mysql *MySQL) DeleteReader(id_reader int) (uint, error) {
+	query := "DELETE FROM readers WHERE id_reader = ?"
+
+	res, err := mysql.conn.ExecutePreparedQuery(query, id_reader)
+
+	if err != nil {
+		fmt.Println("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	rows, _ := res.RowsAffected() 
+
+	return uint(rows), nil
+}

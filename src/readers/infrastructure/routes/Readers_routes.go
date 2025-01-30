@@ -13,5 +13,6 @@ func RegisterRoutes(r *gin.Engine) {
 		readersRouter.POST("/newReader", controllers.NewCreateReaderController().CreateReader)
 		readersRouter.GET("/q=:name", controllers.NewGetReaderByNameController().GetReaderByName)
 		readersRouter.GET("/", controllers.NewGetAllReadersController().GetReaderByName)
+		readersRouter.DELETE("/:id", controllers.NewDeleteReaderController().DeleteBook)
 	}
 }

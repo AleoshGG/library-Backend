@@ -28,7 +28,7 @@ func (db_c *DeleteBookController) DeleteBook(c *gin.Context) {
 	if err != nil || rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error": "No se pudo eliminar el producto " + err.Error(),
+			"error": "No se pudo eliminar el libro " + err.Error(),
 		})
 		return
 	}
