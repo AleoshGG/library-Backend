@@ -14,5 +14,7 @@ func RegisterRoutes(r *gin.Engine) {
 		readersRouter.GET("/q=:name", controllers.NewGetReaderByNameController().GetReaderByName)
 		readersRouter.GET("/", controllers.NewGetAllReadersController().GetReaderByName)
 		readersRouter.DELETE("/:id", controllers.NewDeleteReaderController().DeleteBook)
+		readersRouter.PUT("/status/:id", controllers.NewSetStatusReaderController().SetStatusReader)
+		readersRouter.PUT("/:id", controllers.NewUpdateReaderController().UpdateReader)
 	}
 }

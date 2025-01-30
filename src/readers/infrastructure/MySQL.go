@@ -97,3 +97,33 @@ func (mysql *MySQL) DeleteReader(id_reader int) (uint, error) {
 
 	return uint(rows), nil
 }
+
+func (mysql *MySQL) SetStatusReader(id_reader int, status string) (uint, error) {
+	query := "UPDATE readers SET account_status = ? WHERE id_reader = ?"
+
+	res, err := mysql.conn.ExecutePreparedQuery(query, status, id_reader)
+
+	if err != nil {
+		fmt.Println("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	rows, _ := res.RowsAffected() 
+
+	return uint(rows), nil
+}
+
+func (mysql *MySQL) UpdateReader(id_reader int, reader domain.Reader) (uint, error) {
+	query := "UPDATE readers SET first_name = ?, last_name = ?, email = ?, phone_number = ? WHERE id_reader = ?"
+
+	res, err := mysql.conn.ExecutePreparedQuery(query, reader.First_name, reader.Last_name, reader.Email, reader.Phone_number, id_reader)
+
+	if err != nil {
+		fmt.Println("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	rows, _ := res.RowsAffected() 
+
+	return uint(rows), nil
+}
