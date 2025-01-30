@@ -1,10 +1,10 @@
 package domain
 
 type IReader interface {
-	CreateReader()
-	GetReaderByName()
-	GetAllReaders()
-	DeleteReader()
-	SetStatusReader()
-	UpdateReader()
+	CreateReader(reader Reader) (uint, error)
+	// GetReaderByName()
+	// GetAllReaders()
+	// DeleteReader()
+	// SetStatusReader()
+	// UpdateReader()
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"library-Backend/src/books/domain"
 	"library-Backend/src/core"
-	"log"
 )
 
 type MySQL struct {
@@ -15,7 +14,7 @@ func NewMySQL() *MySQL {
 	conn := core.GetDBPool()
 
 	if conn.Err != "" {
-		log.Fatalln("Error al configurar el pool de conexiones: %v", conn.Err)
+		fmt.Println("Error al configurar el pool de conexiones: %v", conn.Err)
 	}
 
 	return &MySQL{conn: conn}
@@ -27,7 +26,7 @@ func (mysql *MySQL) CreateBook(book domain.Book) (uint, error) {
 	res, err := mysql.conn.ExecutePreparedQuery(query, book.Title, book.Date_publication, book.Editorial, book.Amount)
 	
 	if err != nil {
-		log.Fatalln("Error al ejecutar la consulta: %v", err)
+		fmt.Println("Error al ejecutar la consulta: %v", err)
 		return 0, err
 	}
 
@@ -111,7 +110,7 @@ func (mysql *MySQL) UpdateBook(id_book int, book domain.Book) (uint, error) {
 	res, err := mysql.conn.ExecutePreparedQuery(query, book.Title, book.Date_publication, book.Editorial, book.Amount, id_book)
 	
 	if err != nil {
-		log.Fatalln("Error al ejecutar la consulta: %v", err)
+		fmt.Println("Error al ejecutar la consulta: %v", err)
 		return 0, err
 	}
 
@@ -126,7 +125,7 @@ func (mysql *MySQL) DeleteBook(id_book int) (uint, error) {
 	res, err := mysql.conn.ExecutePreparedQuery(query, id_book)
 
 	if err != nil {
-		log.Fatalln("Error al ejecutar la consulta: %v", err)
+		fmt.Println("Error al ejecutar la consulta: %v", err)
 		return 0, err
 	}
 
