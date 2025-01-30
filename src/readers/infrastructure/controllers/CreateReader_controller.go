@@ -23,7 +23,7 @@ func NewCreateReaderController() *CreateReaderController {
 func (cr_c *CreateReaderController) CreateReader(c *gin.Context) {
 	var reader domain.Reader
 	reader.Account_status = "active"
-	
+
 	if err := c.ShouldBindJSON(&reader); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
@@ -47,8 +47,8 @@ func (cr_c *CreateReaderController) CreateReader(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"status": true,
 		"data": gin.H{
-			"type": "book",
-			"id_book": id,
+			"type": "reader",
+			"id_reader": id,
 			"attributes": gin.H{
 				"first_name": reader.First_name,
 				"last_name": reader.Last_name,

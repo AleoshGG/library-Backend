@@ -34,3 +34,27 @@ func (mysql *MySQL) CreateReader(reader domain.Reader) (uint, error) {
 
 	return uint(id), nil 
 }
+
+func (mysql *MySQL) GetReaderByName(name string) []domain.Reader {
+	query := "SELECT * FROM readers WHERE first_name LIKE CONCAT('%', ?, '%') OR last_name LIKE CONCAT('%', ?, '%')"
+
+	var readers []domain.Reader
+
+	rows := mysql.conn.FetchRows(query, name, name)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return readers
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var r domain.Reader
+		rows.Scan(&r.Id_reader, &r.First_name, &r.Last_name, &r.Email, &r.Phone_number, &r.Account_status)
+
+		readers = append(readers, r)
+	}
+	
+	return readers
+}
