@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"library-Backend/src/books/domain"
 	"library-Backend/src/core"
+	"log"
 )
 
 type MySQL struct {
@@ -14,7 +15,7 @@ func NewMySQL() *MySQL {
 	conn := core.GetDBPool()
 
 	if conn.Err != "" {
-		fmt.Println("Error al configurar el pool de conexiones: %v", conn.Err)
+		log.Fatalln("Error al configurar el pool de conexiones: %v", conn.Err)
 	}
 
 	return &MySQL{conn: conn}
@@ -26,7 +27,7 @@ func (mysql *MySQL) CreateBook(book domain.Book) (uint, error) {
 	res, err := mysql.conn.ExecutePreparedQuery(query, book.Title, book.Date_publication, book.Editorial, book.Amount)
 	
 	if err != nil {
-		fmt.Println("Error al ejecutar la consulta: %v", err)
+		log.Fatalln("Error al ejecutar la consulta: %v", err)
 		return 0, err
 	}
 
@@ -35,12 +36,50 @@ func (mysql *MySQL) CreateBook(book domain.Book) (uint, error) {
 	return uint(id), nil
 }
 
-func (mysql *MySQL) GetAllBooks() {
-	fmt.Println("Lista de productos")
+func (mysql *MySQL) GetAllBooks() []domain.Book {
+	query := "SELECT * FROM books"
+	var books []domain.Book
+	
+	rows := mysql.conn.FetchRows(query)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return books
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var b domain.Book
+		rows.Scan(&b.Id_book, &b.Title, &b.Date_publication, &b.Editorial, &b.Amount)
+
+		books = append(books, b)
+	}
+	
+	return books  
 }
 
-func (mysql *MySQL) GetBookById() {
-	fmt.Println("Lista de productos")
+func (mysql *MySQL) GetBookById(id_book int) []domain.Book {
+	query := "SELECT * FROM books WHERE id_book = ?"
+	var books []domain.Book
+	
+	rows := mysql.conn.FetchRows(query, id_book)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return books
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var b domain.Book
+		rows.Scan(&b.Id_book, &b.Title, &b.Date_publication, &b.Editorial, &b.Amount)
+
+		books = append(books, b)
+	}
+	
+	return books
 }
 
 func (mysql *MySQL) GetBookByTitle() {

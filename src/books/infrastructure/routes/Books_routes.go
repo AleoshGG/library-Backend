@@ -11,5 +11,7 @@ func RegisterRoutes(r *gin.Engine) {
 	userRoutes := r.Group("/books") 
 	{
 		userRoutes.POST("/newBook", controllers.NewCreateBookController().AddBook)
+		userRoutes.GET("/", controllers.NewGetAllBooksController().GetAllBooks)
+		userRoutes.GET("/:id", controllers.NewGetBookByIdController().GetBookById)
 	}
 }

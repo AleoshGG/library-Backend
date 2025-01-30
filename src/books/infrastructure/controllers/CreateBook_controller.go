@@ -30,8 +30,6 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 		})
 		return
 	}
-
-	//newBook := domain.NewBook(book.Title, book.Date_publication, book.Editorial, book.Amount)
 	
 	fmt.Println(book.Show())
 	
@@ -40,7 +38,7 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error": "No se pudo guardar el producto " + err.Error(),
+			"error": "No se pudo guardar el libro " + err.Error(),
 		})
 		return
 	}

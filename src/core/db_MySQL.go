@@ -70,7 +70,7 @@ func (conn *Conn_MySQL) ExecutePreparedQuery(query string, values ...interface{}
 func (conn *Conn_MySQL) FetchRows(query string, values ...interface{}) (*sql.Rows) {
 	rows, err := conn.DB.Query(query, values...)
 	if err != nil {
-		fmt.Printf ("error al ejecutar la consulta SELECT: %w", err)
+		fmt.Printf("error al ejecutar la consulta SELECT: %w", err)
 	}
 
 	return rows
