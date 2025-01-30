@@ -8,12 +8,13 @@ import (
 
 func RegisterRoutes(r *gin.Engine) {
 
-	userRoutes := r.Group("/books") 
+	bookRoutes := r.Group("/books") 
 	{
-		userRoutes.POST("/newBook", controllers.NewCreateBookController().AddBook)
-		userRoutes.GET("/", controllers.NewGetAllBooksController().GetAllBooks)
-		userRoutes.GET("/:id", controllers.NewGetBookByIdController().GetBookById)
-		userRoutes.GET("/q=:title", controllers.NewGetBookByTitleController().GetBookByTitle)
-		userRoutes.PUT("/:id", controllers.NewUpdateBookController().UpdateBook)
+		bookRoutes.POST("/newBook", controllers.NewCreateBookController().AddBook)
+		bookRoutes.GET("/", controllers.NewGetAllBooksController().GetAllBooks)
+		bookRoutes.GET("/:id", controllers.NewGetBookByIdController().GetBookById)
+		bookRoutes.GET("/q=:title", controllers.NewGetBookByTitleController().GetBookByTitle)
+		bookRoutes.PUT("/:id", controllers.NewUpdateBookController().UpdateBook)
+		bookRoutes.DELETE("/:id", controllers.NewDeleteBookController().DeleteBook)
 	}
 }

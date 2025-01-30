@@ -115,11 +115,22 @@ func (mysql *MySQL) UpdateBook(id_book int, book domain.Book) (uint, error) {
 		return 0, err
 	}
 
-	id, _ := res.RowsAffected() 
+	rows, _ := res.RowsAffected() 
 
-	return uint(id), nil
+	return uint(rows), nil
 }
 
-func (mysql *MySQL) DeleteBook() {
-	fmt.Println("Lista de productos")
+func (mysql *MySQL) DeleteBook(id_book int) (uint, error) {
+	query := "DELETE FROM books WHERE id_book = ?"
+
+	res, err := mysql.conn.ExecutePreparedQuery(query, id_book)
+
+	if err != nil {
+		log.Fatalln("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	rows, _ := res.RowsAffected() 
+
+	return uint(rows), nil
 }
