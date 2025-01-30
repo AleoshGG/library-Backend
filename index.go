@@ -1,12 +1,15 @@
 package main
 
 import (
-	"server01/infrastructure/routes"
+	"library-Backend/src/books/infrastructure"
+	"library-Backend/src/books/infrastructure/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	infrastructure.GoMySQL()
+
 	// Crear el router
 	r := gin.Default()
 
