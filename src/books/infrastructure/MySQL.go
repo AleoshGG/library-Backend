@@ -1,15 +1,38 @@
 package infrastructure
 
-import "fmt"
+import (
+	"fmt"
+	"library-Backend/src/books/domain"
+	"library-Backend/src/core"
+)
 
-type MySQL struct{}
-
-func NewMySQL() *MySQL {
-	return &MySQL{}
+type MySQL struct {
+	conn *core.Conn_MySQL
 }
 
-func (mysql *MySQL) CreateBook() {
-	fmt.Println("Producto salvado")
+func NewMySQL() *MySQL {
+	conn := core.GetDBPool()
+
+	if conn.Err != "" {
+		fmt.Println("Error al configurar el pool de conexiones: %v", conn.Err)
+	}
+
+	return &MySQL{conn: conn}
+}
+
+func (mysql *MySQL) CreateBook(book domain.Book) (uint, error) {
+	query := "INSERT INTO books (title, date_publication, editorial, amount) VALUES (?,?,?,?)"
+
+	res, err := mysql.conn.ExecutePreparedQuery(query, book.Title, book.Date_publication, book.Editorial, book.Amount)
+	
+	if err != nil {
+		fmt.Println("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	id, _ := res.LastInsertId() 
+
+	return uint(id), nil
 }
 
 func (mysql *MySQL) GetAllBooks() {

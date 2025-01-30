@@ -10,6 +10,6 @@ func NewCreateBook(db domain.IBook) *CreateBook {
 	return &CreateBook{db: db}
 }
 
-func (uc *CreateBook) Run() {
-	uc.db.CreateBook()
+func (uc *CreateBook) Run(book domain.Book) (uint, error) {
+	return uc.db.CreateBook(book)
 }

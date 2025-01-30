@@ -2,18 +2,17 @@ package domain
 
 import (
 	"fmt"
-	"time"
 )
 
 type Book struct {
 	Id_book          int64
 	Title            string
-	Date_publication time.Time
+	Date_publication string
 	Editorial        string
 	Amount           int64
 }
 
-func NewBook(title string, date_publication time.Time, editorial string, amount int64) *Book {
+func NewBook(title string, date_publication string, editorial string, amount int64) *Book {
 	return &Book{Title: title, Date_publication: date_publication, Editorial: editorial, Amount: amount}
 }
 

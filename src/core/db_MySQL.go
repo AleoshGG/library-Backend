@@ -1,13 +1,13 @@
 package core
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
-	"database/sql"
 
-	"github.com/joho/godotenv"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 type Conn_MySQL struct {
@@ -27,7 +27,7 @@ func GetDBPool() *Conn_MySQL {
 	// Obtener las variables
 	dbHost := os.Getenv("DB_HOST")
 	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
+	dbPass := os.Getenv("DB_PASSWORD")
 	dbSchema := os.Getenv("DB_SCHEMA")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", dbUser, dbPass, dbHost, dbSchema)
@@ -51,6 +51,7 @@ func GetDBPool() *Conn_MySQL {
 }
 
 func (conn *Conn_MySQL) ExecutePreparedQuery(query string, values ...interface{}) (sql.Result, error) {
+	
 	stmt, err := conn.DB.Prepare(query)
 	if err != nil {
 		return nil, fmt.Errorf("error al preparar la consulta: %w", err)

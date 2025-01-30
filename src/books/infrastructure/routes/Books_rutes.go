@@ -8,8 +8,8 @@ import (
 
 func RegisterRoutes(r *gin.Engine) {
 
-	userRoutes := r.Group("/users") 
+	userRoutes := r.Group("/books") 
 	{
-		userRoutes.GET("/", controllers.GetUser)
+		userRoutes.POST("/newBook", controllers.NewCreateBookController().AddBook)
 	}
 }

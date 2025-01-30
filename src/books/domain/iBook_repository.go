@@ -1,7 +1,7 @@
 package domain
 
 type IBook interface {
-	CreateBook()
+	CreateBook(book Book) (uint, error)
 	GetAllBooks()
 	GetBookById()
 	GetBookByTitle()
