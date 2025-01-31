@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"library-Backend/src/readers/infrastructure/controllers/validators"
 	"library-Backend/src/readers/aplication"
 	"library-Backend/src/readers/domain"
 	"library-Backend/src/readers/infrastructure"
@@ -25,6 +26,14 @@ func (cr_c *CreateReaderController) CreateReader(c *gin.Context) {
 	reader.Account_status = "active"
 
 	if err := c.ShouldBindJSON(&reader); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"error": "Datos inválidos: " + err.Error(),
+		})
+		return
+	}
+
+	if err := validators.CheckReader(reader); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"error": "Datos inválidos: " + err.Error(),

@@ -23,12 +23,12 @@ func (dr_c *DeleteReaderController) DeleteBook(c *gin.Context) {
 	id := c.Param("id")
 	id_reader, _ := strconv.ParseInt(id, 10, 64)
 
-	rowsAffected, err := dr_c.app.Run(int(id_reader))
+	rowsAffected, _ := dr_c.app.Run(int(id_reader))
 
-	if err != nil || rowsAffected == 0 {
+	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error":  "No se pudo eliminar el lector " + err.Error(),
+			"error":  "No se pudo eliminar el lector ",
 		})
 		return
 	}

@@ -4,6 +4,7 @@ import (
 	"library-Backend/src/readers/aplication"
 	"library-Backend/src/readers/domain"
 	"library-Backend/src/readers/infrastructure"
+	"library-Backend/src/readers/infrastructure/controllers/validators"
 	"net/http"
 	"strconv"
 
@@ -33,12 +34,20 @@ func (ur_c *UpdateReaderController) UpdateReader(c *gin.Context) {
 		return
 	}
 
-	rowsAffected, err := ur_c.app.Run(int(id_reader), newReader)
+	if err := validators.CheckReader(newReader); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"error": "Datos inválidos: " + err.Error(),
+		})
+		return
+	}
 
-	if err != nil || rowsAffected == 0 {
+	rowsAffected, _ := ur_c.app.Run(int(id_reader), newReader)
+
+	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error":  "No se pudo actualizar el lector " + err.Error(),
+			"error":  "No se pudo actualizar el lector ",
 		})
 		return
 	}

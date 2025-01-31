@@ -5,6 +5,7 @@ import (
 	"library-Backend/src/books/aplication"
 	"library-Backend/src/books/domain"
 	"library-Backend/src/books/infrastructure"
+	"library-Backend/src/books/infrastructure/controllers/validators"
 	"net/http"
 	"strconv"
 
@@ -34,14 +35,22 @@ func (ub_c *UpdateBookController) UpdateBook(c *gin.Context) {
 		return
 	}
 	
+	if err := validators.CheckBook(book); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"error": "Datos inválidos: " + err.Error(),
+		})
+		return
+	}
+
 	fmt.Println(book.Show())
 
-	rowsAffected, err := ub_c.app.Run(int(id_book), book)
+	rowsAffected, _ := ub_c.app.Run(int(id_book), book)
 
-	if err != nil || rowsAffected == 0 {
+	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error": "No se pudo actualizar el libro " + err.Error(),
+			"error": "No se pudo actualizar el libro: No se entontró la referencia o ocurrió algo más",
 		})
 		return
 	}

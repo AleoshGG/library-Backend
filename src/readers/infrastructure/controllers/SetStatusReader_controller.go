@@ -42,12 +42,12 @@ func (sse_c *SetStatusReaderController) SetStatusReader(c *gin.Context) {
 		return
 	}
 
-	rowsAffected, err := sse_c.app.Run(int(id_reader), status.Account_status)
+	rowsAffected, _ := sse_c.app.Run(int(id_reader), status.Account_status)
 
-	if err != nil || rowsAffected == 0 {
+	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error":  "No se pudo actualizar el estado " + err.Error(),
+			"error":  "No se pudo actualizar el estado ",
 		})
 		return
 	}

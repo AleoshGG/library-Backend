@@ -23,12 +23,12 @@ func (db_c *DeleteBookController) DeleteBook(c *gin.Context) {
 	id := c.Param("id")
 	id_book, _ := strconv.ParseInt(id, 10, 64)
 
-	rowsAffected, err := db_c.app.Run(int(id_book))
+	rowsAffected, _ := db_c.app.Run(int(id_book))
 
-	if err != nil || rowsAffected == 0 {
+	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error": "No se pudo eliminar el libro " + err.Error(),
+			"error": "No se pudo actualizar el libro: No se entontró la referencia o ocurrió algo más",
 		})
 		return
 	}

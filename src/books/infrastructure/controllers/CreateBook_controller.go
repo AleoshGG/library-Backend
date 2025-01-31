@@ -5,6 +5,7 @@ import (
 	"library-Backend/src/books/aplication"
 	"library-Backend/src/books/domain"
 	"library-Backend/src/books/infrastructure"
+	"library-Backend/src/books/infrastructure/controllers/validators"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,14 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 	var book domain.Book
 	
 	if err := c.ShouldBindJSON(&book); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"error": "Datos inválidos: " + err.Error(),
+		})
+		return
+	}
+
+	if err := validators.CheckBook(book); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"error": "Datos inválidos: " + err.Error(),
@@ -57,3 +66,4 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 		},
 	})
 }
+
