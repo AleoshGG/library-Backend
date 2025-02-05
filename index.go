@@ -6,6 +6,7 @@ import (
 	readerInfra "library-Backend/src/readers/infrastructure"
 	rReaders "library-Backend/src/readers/infrastructure/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,8 @@ func main() {
 	readerInfra.GoMySQL()
 	// Crear el router
 	r := gin.Default()
+	r.Use(cors.Default())
+
 
 	// Registrar las rutas
 	rBooks.RegisterRoutes(r)

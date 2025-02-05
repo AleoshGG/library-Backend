@@ -7,4 +7,5 @@ type IBook interface {
 	GetBookByTitle(title string) []Book
 	UpdateBook(id_book int, book Book) (uint, error)
 	DeleteBook(id_book int) (uint, error)
+	GetByEditorialAmount(editorial string, minAmount int) []Book
 }

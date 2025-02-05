@@ -133,3 +133,26 @@ func (mysql *MySQL) DeleteBook(id_book int) (uint, error) {
 
 	return uint(rows), nil
 }
+
+func (mysql *MySQL) GetByEditorialAmount(editorial string, minAmount int) []domain.Book {
+	query := "SELECT * FROM books WHERE editorial = ? AND amount >= ?"
+	var books []domain.Book
+	
+	rows := mysql.conn.FetchRows(query, editorial, minAmount)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return books
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var b domain.Book
+		rows.Scan(&b.Id_book, &b.Title, &b.Date_publication, &b.Editorial, &b.Amount)
+
+		books = append(books, b)
+	}
+	
+	return books
+}
