@@ -51,7 +51,7 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 		})
 		return
 	}
-		
+
 	c.JSON(http.StatusCreated, gin.H{
 		"status": true,
 		"data": gin.H{
