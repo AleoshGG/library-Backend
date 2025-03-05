@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"library-Backend/src/books/aplication"
+	aplication "library-Backend/src/books/aplication/useCases"
 	"library-Backend/src/books/domain"
 	"library-Backend/src/books/infrastructure"
 	"library-Backend/src/books/infrastructure/controllers/validators"
@@ -12,17 +12,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UpdateBookController struct {
+type LendBookController struct {
 	app *aplication.UpdateBook
 }
 
-func NewUpdateBookController() *UpdateBookController {
+func NewLendBookController() *LendBookController {
 	mysql := infrastructure.GetMySQL()
 	app := aplication.NewUpdateBook(mysql)
-	return &UpdateBookController{app: app}
+	return &LendBookController{app: app}
 }
 
-func (ub_c *UpdateBookController) UpdateBook(c *gin.Context) {
+func (ub_c *LendBookController) LendBook(c *gin.Context) {
 	id := c.Param("id")
 	var book domain.Book
 

@@ -7,23 +7,26 @@ import (
 	"library-Backend/src/books/infrastructure"
 	"library-Backend/src/books/infrastructure/controllers/validators"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-type CreateBookController struct {
-	app *aplication.CreateBook
+type ReturnBookController struct {
+	app *aplication.UpdateBook
 }
 
-func NewCreateBookController() *CreateBookController {
+func NewReturnBookController() *ReturnBookController {
 	mysql := infrastructure.GetMySQL()
-	app := aplication.NewCreateBook(mysql)
-	return &CreateBookController{app: app}
+	app := aplication.NewUpdateBook(mysql)
+	return &ReturnBookController{app: app}
 }
 
-func (cb_c *CreateBookController) AddBook(c *gin.Context) {
+func (ub_c *ReturnBookController) ReturnBook(c *gin.Context) {
+	id := c.Param("id")
 	var book domain.Book
-	
+
+	id_book, _ := strconv.ParseInt(id, 10, 64)
 	if err := c.ShouldBindJSON(&book); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
@@ -31,7 +34,7 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 		})
 		return
 	}
-
+	
 	if err := validators.CheckBook(book); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
@@ -39,24 +42,24 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	fmt.Println(book.Show())
-	
-	id, err := cb_c.app.Run(book)
-	
-	if err != nil {
+
+	rowsAffected, _ := ub_c.app.Run(int(id_book), book)
+
+	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,
-			"error": "No se pudo guardar el libro " + err.Error(),
+			"error": "No se pudo actualizar el libro: No se entontró la referencia o ocurrió algo más",
 		})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"data": gin.H{
 			"type": "book",
-			"id_book": id,
+			"id_book": id_book,
 			"attributes": gin.H{
 				"title": book.Title,
 				"date_publication": book.Date_publication,
@@ -66,4 +69,3 @@ func (cb_c *CreateBookController) AddBook(c *gin.Context) {
 		},
 	})
 }
-

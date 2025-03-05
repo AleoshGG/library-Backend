@@ -14,9 +14,9 @@ func RegisterRoutes(r *gin.Engine) {
 		bookRoutes.GET("/", controllers.NewGetAllBooksController().GetAllBooks)
 		bookRoutes.GET("/:id", controllers.NewGetBookByIdController().GetBookById)
 		bookRoutes.GET("/q=:title", controllers.NewGetBookByTitleController().GetBookByTitle)
-		bookRoutes.PUT("/:id", controllers.NewUpdateBookController().UpdateBook)
+		bookRoutes.PUT("/lend/:id", controllers.NewLendBookController().LendBook)
+		bookRoutes.PUT("/return/:id", controllers.NewReturnBookController().ReturnBook)
 		bookRoutes.DELETE("/:id", controllers.NewDeleteBookController().DeleteBook)
 		bookRoutes.GET("/search", controllers.NewGetByEditorialAmount().GetByEditorialAmount)
-		bookRoutes.GET("/notifications", controllers.NewHandler().GetAllBooks)
 	}
 }
