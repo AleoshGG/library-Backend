@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"library-Backend/src/books/aplication/services"
 	aplication "library-Backend/src/books/aplication/useCases"
 	"library-Backend/src/books/domain"
 	"library-Backend/src/books/infrastructure"
@@ -14,12 +15,15 @@ import (
 
 type LendBookController struct {
 	app *aplication.UpdateBook
+	service *services.NotifyOfLendEvent
 }
 
 func NewLendBookController() *LendBookController {
 	mysql := infrastructure.GetMySQL()
+	rabbit := infrastructure.GetRabbitMQ()
 	app := aplication.NewUpdateBook(mysql)
-	return &LendBookController{app: app}
+	service := services.NewNotifyOfLend(rabbit)
+	return &LendBookController{app: app, service: service}
 }
 
 func (ub_c *LendBookController) LendBook(c *gin.Context) {
@@ -54,6 +58,9 @@ func (ub_c *LendBookController) LendBook(c *gin.Context) {
 		})
 		return
 	}
+
+	// Notificar de prestamo
+	ub_c.service.Run()
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,

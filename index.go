@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	booksInfra.GoMySQL()
+	booksInfra.GoDependences()
 	// Crear el router
 	r := gin.Default()
 	r.Use(cors.Default())
