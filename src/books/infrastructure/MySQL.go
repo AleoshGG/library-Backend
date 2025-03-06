@@ -119,6 +119,36 @@ func (mysql *MySQL) UpdateBook(id_book int, book domain.Book) (uint, error) {
 	return uint(rows), nil
 }
 
+func (mysql *MySQL) LendBook(id_book int) (uint, error) {
+	query := "UPDATE books SET amount = amount - 1 WHERE id_book = ?" 
+
+	res, err := mysql.conn.ExecutePreparedQuery(query,  id_book)
+	
+	if err != nil {
+		fmt.Println("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	rows, _ := res.RowsAffected() 
+
+	return uint(rows), nil
+}
+
+func (mysql *MySQL) ReturnBook(id_book int) (uint, error) {
+	query := "UPDATE books SET amount = amount + 1 WHERE id_book = ?" 
+
+	res, err := mysql.conn.ExecutePreparedQuery(query,  id_book)
+	
+	if err != nil {
+		fmt.Println("Error al ejecutar la consulta: %v", err)
+		return 0, err
+	}
+
+	rows, _ := res.RowsAffected() 
+
+	return uint(rows), nil
+}
+
 func (mysql *MySQL) DeleteBook(id_book int) (uint, error) {
 	query := "DELETE FROM books WHERE id_book = ?"
 

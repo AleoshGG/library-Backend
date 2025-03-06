@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -18,11 +17,8 @@ func NewRabbitMQ() *RabbitMQ{
 }
 
 func (r *RabbitMQ) NotifyOfLend() {
-	// Cargar las variables de entorno
-	godotenv.Load()
-	
 	// Conectar con nuestro host de RABBITMQ
-	conn, err := amqp.Dial(os.Getenv("URL"))
+	conn, err := amqp.Dial(os.Getenv("URL_RABBIT"))
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
