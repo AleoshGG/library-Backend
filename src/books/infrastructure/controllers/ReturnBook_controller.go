@@ -54,7 +54,7 @@ func (ub_c *ReturnBookController) ReturnBook(c *gin.Context) {
 	}
 
 	// Notificar de devuelto
-	ub_c.service.Run()
+	ub_c.service.Run(int(loan.Id_reader))
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,

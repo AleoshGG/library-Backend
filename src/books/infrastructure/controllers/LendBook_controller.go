@@ -54,7 +54,7 @@ func (ub_c *LendBookController) LendBook(c *gin.Context) {
 	}
 
 	// Notificar de prestamo
-	ub_c.service.Run()
+	ub_c.service.Run(int(loan.Id_reader), loan.Return_date)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,

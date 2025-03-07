@@ -2,76 +2,78 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-type RabbitMQ struct {}
-
-func NewRabbitMQ() *RabbitMQ{
-	return &RabbitMQ{} 
+type Notify struct {
+	Id_reader   int
+	Return_date string
 }
 
-func (r *RabbitMQ) NotifyOfLend() {
-	// Conectar con nuestro host de RABBITMQ
+type RabbitMQ struct {
+	conn *amqp.Connection
+	ch   *amqp.Channel
+}
+
+func NewRabbitMQ() *RabbitMQ{
 	conn, err := amqp.Dial(os.Getenv("URL_RABBIT"))
 	failOnError(err, "Failed to connect to RabbitMQ")
-	defer conn.Close()
-
-	// Entramos al canal
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
-	defer ch.Close()
 
+	return &RabbitMQ{conn: conn, ch: ch}  
+}
+
+func (r *RabbitMQ) NotifyOfLend(id_reader int, return_date string) {
+	var notify Notify
+	notify.Id_reader = id_reader
+	notify.Return_date = return_date
+	payload, err := json.Marshal(notify)
+	failOnError(err, "Error al serializar Loan a JSON")
+	r.prepareToMessage(payload)
+}
+
+func (r *RabbitMQ) NotifyOfReturn(id_reader int) {
+	var notify Notify
+	notify.Id_reader = id_reader
+	notify.Return_date = "null"
+	payload, err := json.Marshal(notify)
+	failOnError(err, "Error al serializar Loan a JSON")
+	r.prepareToMessage(payload)
+}
+
+func (r *RabbitMQ) prepareToMessage(body []byte) {
 	// Declaración del exchange (intercambiador):
-	err = ch.ExchangeDeclare(
-		"logs",   // name
-		"fanout", // type
+	r.ch.ExchangeDeclare(
+		"exnotificacion",   // name
+		"direct", // type
 		true,     // durable
 		false,    // auto-deleted
 		false,    // internal
 		false,    // no-wait
 		nil,      // arguments
 	)
-	failOnError(err, "Failed to declare an exchange")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	  
-	// Creación de una publicación
-	body := bodyFrom(os.Args)
-	err = ch.PublishWithContext(ctx,
-		"logs",     // exchange
-		"", // routing key
+	r.ch.PublishWithContext(ctx,
+		"exnotificacion",     // exchange
+		"notificacion", // routing key
 		false,  // mandatory
 		false,  // immediate
 		amqp.Publishing {
-		  ContentType: "text/plain",
-		  Body:        []byte(body),
+		  ContentType: "application/json",
+		  Body:        body,
 		})
-	failOnError(err, "Failed to publish a message")
-	
-	log.Printf(" [x] Sent %s\n", body)
+	//log.Printf(" [x] Sent %s\n", body)
 }
 
-func (r *RabbitMQ) NotifyOfReturn() {
-	
-}
-
-func bodyFrom(args []string) string {
-	var s string
-	if (len(args) < 2) || os.Args[1] == "" {
-		s = "Va a la misma cola, el exchange entrega a todos"
-	} else {
-		s = strings.Join(args[1:], " ")
-	}
-	return s
-}
-  
 
 func failOnError(err error, msg string) {
 	if err != nil {

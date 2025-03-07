@@ -1,6 +1,6 @@
 package repository
 
 type IRabbit interface {
-	NotifyOfLend()
-	NotifyOfReturn()
+	NotifyOfLend(id_reader int, return_date string)
+	NotifyOfReturn(id_reader int)
 }
