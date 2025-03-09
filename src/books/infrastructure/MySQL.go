@@ -46,7 +46,7 @@ func (mysql *MySQL) GetAllBooks() []domain.Book {
         return books
     }
 
-	defer rows.Close()
+	//defer rows.Close()
 
 	for rows.Next() {
 		var b domain.Book
