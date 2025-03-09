@@ -36,7 +36,7 @@ func (mysql *MySQL) CreateBook(book domain.Book) (uint, error) {
 }
 
 func (mysql *MySQL) GetAllBooks() []domain.Book {
-	query := "SELECT * FROM books;"
+	query := "SELECT * FROM books"
 	var books []domain.Book
 	
 	rows := mysql.conn.FetchRows(query)
