@@ -43,7 +43,7 @@ func GetDBPool() *Conn_MySQL {
 
 	// Probar la conexión
 	if err := db.Ping(); err != nil {
-		// db.Close()
+		db.Close()
 		error = fmt.Sprintf("error al verificar la conexión a la base de datos: %w", err)
 	}
 
@@ -56,7 +56,7 @@ func (conn *Conn_MySQL) ExecutePreparedQuery(query string, values ...interface{}
 	if err != nil {
 		return nil, fmt.Errorf("error al preparar la consulta: %w", err)
 	}
-	//defer stmt.Close()
+	defer stmt.Close()
 
 	result, err := stmt.Exec(values...)
 	if err != nil {
