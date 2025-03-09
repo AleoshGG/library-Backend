@@ -42,10 +42,10 @@ func GetDBPool() *Conn_MySQL {
 	db.SetMaxOpenConns(10)
 
 	// Probar la conexión
-	/* if err := db.Ping(); err != nil {
+	if err := db.Ping(); err != nil {
 		db.Close()
 		error = fmt.Sprintf("error al verificar la conexión a la base de datos: %w", err)
-	} */
+	} 
 
 	return &Conn_MySQL{DB: db, Err: error}
 }
