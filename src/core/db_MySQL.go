@@ -43,7 +43,7 @@ func GetDBPool() *Conn_MySQL {
 
 	// Probar la conexión
 	if err := db.Ping(); err != nil {
-		db.Close()
+		// db.Close()
 		error = fmt.Sprintf("error al verificar la conexión a la base de datos: %w", err)
 	}
 
